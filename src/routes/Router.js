@@ -7,12 +7,12 @@ import UsersLists from "../features/users/UsersLists";
 import Login from "../features/auth/Login";
 import Layout from "../components/Layout";
 import NotFound from "../components/NotFound";
-import Note from "../features/notes/Note";
 import EditUser from "../features/users/EditUser";
 import NewUserForm from "../features/users/NewUserForm";
 import EditNote from "../features/notes/EditNote";
 import NewNote from "../features/notes/NewNote";
 import Prefetch from "../features/auth/Prefetch";
+import PersistLogin from "../features/auth/PersistLogin";
 
 const router = createBrowserRouter([
     {
@@ -29,50 +29,55 @@ const router = createBrowserRouter([
                 element: <Login />
             },
             {
-                element: <Prefetch />,
+                element: <PersistLogin />,
                 children:[
                     {
-                        path: '/dash',
-                        element: <DashLayout />,
+                        element: <Prefetch />,
                         children:[
                             {
                                 path: '/dash',
-                                element: <Welcome />,
-                                index: true
-                            },
-                            {
-                                path: '/dash/notes',
-                                children: [
+                                element: <DashLayout />,
+                                children:[
+                                    {
+                                        path: '/dash',
+                                        element: <Welcome />,
+                                        index: true
+                                    },
                                     {
                                         path: '/dash/notes',
-                                        element: <NotesLists />,
-                                        index: true
+                                        children: [
+                                            {
+                                                path: '/dash/notes',
+                                                element: <NotesLists />,
+                                                index: true
+                                            },
+                                            {
+                                                path: '/dash/notes/:id',
+                                                element: <EditNote />
+                                            },
+                                            {
+                                                path: '/dash/notes/new',
+                                                element: <NewNote />
+                                            }
+                                        ]
                                     },
-                                    {
-                                        path: '/dash/notes/:id',
-                                        element: <EditNote />
-                                    },
-                                    {
-                                        path: '/dash/notes/new',
-                                        element: <NewNote />
-                                    }
-                                ]
-                            },
-                            {
-                                path: '/dash/users',
-                                children: [
                                     {
                                         path: '/dash/users',
-                                        element: <UsersLists />,
-                                        index: true
-                                    },
-                                    {
-                                        path: '/dash/users/:id',
-                                        element: <EditUser />
-                                    },
-                                    {
-                                        path: '/dash/users/new',
-                                        element: <NewUserForm />
+                                        children: [
+                                            {
+                                                path: '/dash/users',
+                                                element: <UsersLists />,
+                                                index: true
+                                            },
+                                            {
+                                                path: '/dash/users/:id',
+                                                element: <EditUser />
+                                            },
+                                            {
+                                                path: '/dash/users/new',
+                                                element: <NewUserForm />
+                                            }
+                                        ]
                                     }
                                 ]
                             }
