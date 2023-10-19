@@ -13,6 +13,8 @@ import EditNote from "../features/notes/EditNote";
 import NewNote from "../features/notes/NewNote";
 import Prefetch from "../features/auth/Prefetch";
 import PersistLogin from "../features/auth/PersistLogin";
+import RequireAuth from "./RequireAuth";
+import { ROLES } from "../config/roles";
 
 const router = createBrowserRouter([
     {
@@ -20,62 +22,72 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: '/',
+                path: '/', //public route
                 element: <Public />,
                 index: true,
             },
             {
-                path: '/login',
+                path: '/login', //public route
                 element: <Login />
             },
             {
-                element: <PersistLogin />,
+                element: <PersistLogin />, 
                 children:[
                     {
-                        element: <Prefetch />,
-                        children:[
+                        element: <RequireAuth allowedRoles={[...Object.values(ROLES)]} />, // protected from here - access for all roles
+                        children: [
                             {
-                                path: '/dash',
-                                element: <DashLayout />,
+                                element: <Prefetch />,
                                 children:[
                                     {
                                         path: '/dash',
-                                        element: <Welcome />,
-                                        index: true
-                                    },
-                                    {
-                                        path: '/dash/notes',
-                                        children: [
+                                        element: <DashLayout />,
+                                        children:[
+                                            {
+                                                path: '/dash',
+                                                element: <Welcome />,
+                                                index: true
+                                            },
                                             {
                                                 path: '/dash/notes',
-                                                element: <NotesLists />,
-                                                index: true
+                                                children: [
+                                                    {
+                                                        path: '/dash/notes',
+                                                        element: <NotesLists />,
+                                                        index: true
+                                                    },
+                                                    {
+                                                        path: '/dash/notes/:id',
+                                                        element: <EditNote />
+                                                    },
+                                                    {
+                                                        path: '/dash/notes/new',
+                                                        element: <NewNote />
+                                                    }
+                                                ]
                                             },
                                             {
-                                                path: '/dash/notes/:id',
-                                                element: <EditNote />
-                                            },
-                                            {
-                                                path: '/dash/notes/new',
-                                                element: <NewNote />
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        path: '/dash/users',
-                                        children: [
-                                            {
-                                                path: '/dash/users',
-                                                element: <UsersLists />,
-                                                index: true
-                                            },
-                                            {
-                                                path: '/dash/users/:id',
-                                                element: <EditUser />
-                                            },
-                                            {
-                                                path: '/dash/users/new',
-                                                element: <NewUserForm />
+                                                element: <RequireAuth allowedRoles={[ROLES.Manager,ROLES.Admin]} />, // protected from here - access for manager and admin roles
+                                                children:[
+                                                    {
+                                                        path: '/dash/users',
+                                                        children: [
+                                                            {
+                                                                path: '/dash/users',
+                                                                element: <UsersLists />,
+                                                                index: true
+                                                            },
+                                                            {
+                                                                path: '/dash/users/:id',
+                                                                element: <EditUser />
+                                                            },
+                                                            {
+                                                                path: '/dash/users/new',
+                                                                element: <NewUserForm />
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
                                             }
                                         ]
                                     }

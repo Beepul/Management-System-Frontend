@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux'
 import { setCredentials } from './authSlice'
 import { useLoginMutation } from './authApiSlice'
 import usePersist from '../../hooks/usePersist'
+import PulseLoader from 'react-spinners/PulseLoader'
+import useTitle from '../../hooks/useTitle'
 
 const Login = () => {
   const userRef = useRef(null)
@@ -13,6 +15,8 @@ const Login = () => {
   const [password,setPassword] = useState('')
   const [errMsg,setErrMsg] = useState('')
   const [persist,setPersist] = usePersist()
+
+  useTitle({title:'MS - Login'})
   
   useEffect(() => {
     console.log({persist})
@@ -58,7 +62,7 @@ const Login = () => {
   const handlePwdInput = (e) => setPassword(e.target.value)
   const handleToggle = () => setPersist(prev => !prev)
 
-  if(isLoading) return <p>Loading...</p>
+  if(isLoading) return <PulseLoader color={'#fff'}/>
 
   const content = (
     <section className='public'>
